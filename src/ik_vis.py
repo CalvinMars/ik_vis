@@ -4,6 +4,7 @@ import pygame
 import rospy
 import threading
 import time
+import math
 from sensor_msgs.msg import JointState
 from Queue import Queue
 
@@ -13,6 +14,8 @@ ELBOW =         2
 WRIST =         3
 WRIST_SPIN =    4
 CLAW =          5
+
+
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -79,7 +82,11 @@ class IkViz():
             self.text = self.font.render(message, True, (10, 200, 10))
             self.screen.blit(self.text, (WIDTH / 2, HEIGHT / 2))
             pygame.display.update()
-
+    
+    def get_endpoint(x, y, length, angle):
+        end_x = (length * math.sin(angle)) + x
+        end_y = (length * math.cos(angle)) + y
+        return (end_x, end_y)
 
     def ros_subscribe(self):
         rospy.Subscriber('joint_states', JointState, self.pos_callback)
